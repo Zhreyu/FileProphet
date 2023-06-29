@@ -13,9 +13,9 @@ bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 file = None
 stored_query = None
 
-os.environ["HUGGINGFACEHUB_API_TOKEN"] = "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"
+os.environ["HUGGINGFACEHUB_API_TOKEN"] = ""
 embeddings = HuggingFaceEmbeddings()
-llm6 = HuggingFaceHub(repo_id="MBZUAI/LaMini-Flan-T5-783M", model_kwargs={"temperature": 0, "max_length": 512})
+llm6 = HuggingFaceHub(repo_id="declare-lab/flan-alpaca-large", model_kwargs={"temperature":0, "max_length":512})
 chain = load_qa_chain(llm6, chain_type="stuff")     
 
 @bot.event
@@ -64,11 +64,12 @@ async def inputfile(ctx: commands.Context):
             docs = db.similarity_search(stored_query)
             results = chain.run(input_documents=docs, question=stored_query)
             await ctx.send(results)
-
             await ctx.send("Any further assistance?")
 
-    except:
-        await ctx.send("Failed to save or process the file./Timeout")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        await ctx.send("Time out")
+        
 
 
 
@@ -89,4 +90,4 @@ async def exit(ctx: commands.Context):
         await ctx.send("Failed to delete the file.")
 
 
-bot.run('MTEyMzYwMzQ2NzE5NDMzNTMwMg.GtGW2r.RW9jO-lafxu0RtGeYROMOyUE9BsKyrZUZGm-HY')
+bot.run('')
